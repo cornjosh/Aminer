@@ -10,6 +10,10 @@ install_ubuntu(){
   cd ~ || exit
 }
 
+start_ubuntu(){
+  bash ~/ubuntu-in-termux/startubuntu.sh
+}
+
 add_to_bashrc(){
   echo "$1" >> ~/.bashrc
 }
@@ -20,5 +24,6 @@ autostart_ubuntu(){
 }
 
 install_ubuntu
+start_ubuntu
 echo "已经在执行了"
 
