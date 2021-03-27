@@ -32,8 +32,9 @@ service_bash(){
 echo "SHELL DEMON START!!"
 while true
 do
+
 	PID_COUNT=\$(ps aux|grep ./xmrig |grep -c grep)
-	if [ $PID_COUNT -eq 0 ]
+	if [ \$PID_COUNT -eq 0 ]
 	then
 		[ ! -e ./xmrig ] && echo "ERROR: XMRIG not exists."  && exit
 		bash ./xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
@@ -48,7 +49,7 @@ EOM
 
 
 USERPASS="12345:12345"
-MINING_URL="mine.c3pool.com:13333"
+MIMING_URL="mine.c3pool.com:13333"
 
 while getopts "O:o:" OPT; do
     case $OPT in
