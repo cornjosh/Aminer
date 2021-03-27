@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 
 install_ubuntu(){
-  local command="apt-get update && apt-get upgrade -y"
-  command+=" && apt-get install wget proot git -y"
-  command+=" && cd ~"
-  command+=" && git clone https://github.com/MFDGaming/ubuntu-in-termux.git"
-  command+=" && cd ubuntu-in-termux"
-  command+=" && bash ubuntu.sh -y"
-  command+=" && cd ~"
-  command+=" && ./startubuntu.sh"
-  exec "$command"
+  apt-get update && apt-get upgrade -y
+  apt-get install wget proot git -y
+  cd ~ || exit
+  git clone https://github.com/MFDGaming/ubuntu-in-termux.git
+  cd ubuntu-in-termux || exit
+  bash ubuntu.sh -y
+  cd ~ || exit
 }
 
 add_to_bashrc(){
