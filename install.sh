@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 install_ubuntu(){
-  apt-get update && apt-get upgrade -y
-  apt-get install wget proot git -y
+  pkg update && pkg upgrade -y
+  pkg install wget proot git -y
   cd "$HOME" || exit
   git clone https://github.com/MFDGaming/ubuntu-in-termux.git
   cd ubuntu-in-termux || exit
@@ -30,9 +30,8 @@ apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev -y
 git clone https://github.com/C3Pool/xmrig-C3.git
 sed -i 's/kDefaultDonateLevel = 1/kDefaultDonateLevel = 0/g' ./xmrig-C3/src/donate.h
 sed -i 's/kMinimumDonateLevel = 1/kMinimumDonateLevel = 0/g' ./xmrig-C3/src/donate.h
-mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j$(nproc) && mv xmrig \$HOME && cd \$HOME && rm -rf xmrig-C3
-sleep 15
-exec "exit"
+mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j\$(nproc) && mv xmrig \$HOME && cd \$HOME && rm -rf xmrig-C3
+
 EOM
 
   echo "[ ! -e ./xmrig ] && bash ./install.sh" >> "$HOME/ubuntu-in-termux/ubuntu-fs/root/.bashrc"
@@ -45,14 +44,15 @@ service_bash(){
 #!/bin/bash
 
 echo "SHELL DEMON START!!"
+cd "\$HOME"
 while true
 do
 
-	PID_COUNT=\$(ps aux|grep ./xmrig |grep -c grep)
+	PID_COUNT=\$(ps aux|grep ./xmrig |grep -v grep|wc -l)
 	if [ \$PID_COUNT -eq 0 ]
 	then
-		[ ! -e \$HOME/xmrig ] && echo "ERROR: XMRIG not exists."  && exit
-		\$HOME/xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
+		[ ! -e ./xmrig ] && echo "ERROR: XMRIG not exists."  && exit
+		./xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
 	fi
 	sleep 60
 done
