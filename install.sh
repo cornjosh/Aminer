@@ -3,19 +3,19 @@
 install_ubuntu(){
   apt-get update && apt-get upgrade -y
   apt-get install wget proot git -y
-  cd ~ || exit
+  cd "$HOME" || exit
   git clone https://github.com/MFDGaming/ubuntu-in-termux.git
   cd ubuntu-in-termux || exit
   bash ubuntu.sh -y
-  cd ~ || exit
+  cd "$HOME" || exit
 }
 
 start_ubuntu(){
-  bash ~/ubuntu-in-termux/startubuntu.sh
+  bash $HOME/ubuntu-in-termux/startubuntu.sh
 }
 
 host_bashrc(){
-  echo "bash ~/ubuntu-in-termux/startubuntu.sh" >> ~/.bashrc
+  echo "bash $HOME/ubuntu-in-termux/startubuntu.sh" >> "$HOME/.bashrc"
 }
 
 install_bash(){
@@ -30,12 +30,12 @@ apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev -y
 git clone https://github.com/C3Pool/xmrig-C3.git
 sed -i 's/kDefaultDonateLevel = 1/kDefaultDonateLevel = 0/g' ./xmrig-C3/src/donate.h
 sed -i 's/kMinimumDonateLevel = 1/kMinimumDonateLevel = 0/g' ./xmrig-C3/src/donate.h
-mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j$(nproc) && mv xmrig ~ && cd ~ && rm -rf xmrig-C3
+mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j$(nproc) && mv xmrig $HOME && cd $HOME && rm -rf xmrig-C3
 sleep 15
-exit
+exec "exit"
 EOM
 
-  echo "[ ! -e ./xmrig ] && bash ./install.sh" >> ~/ubuntu-in-termux/ubuntu-fs/root/.bashrc
+  echo "[ ! -e ./xmrig ] && bash ./install.sh" >> "$HOME/ubuntu-in-termux/ubuntu-fs/root/.bashrc"
 }
 
 
@@ -52,14 +52,14 @@ do
 	if [ \$PID_COUNT -eq 0 ]
 	then
 		[ ! -e ./xmrig ] && echo "ERROR: XMRIG not exists."  && exit
-		bash ./xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
+		./xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
 	fi
 	sleep 60
 done
 
 EOM
 
-  echo "bash ./service.sh" >> ~/ubuntu-in-termux/ubuntu-fs/root/.bashrc
+  echo "bash ./service.sh" >> "$HOME/ubuntu-in-termux/ubuntu-fs/root/.bashrc"
 }
 
 
