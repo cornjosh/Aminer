@@ -49,9 +49,9 @@ Usage:
   bash <(curl -fsSL git.io/aminer) [options...] <arg>
 Options:
   -y  Auto mode, ignore risks warning
-  -O  Pool's user and password, the arguments like ${BLUE_FONT_PREFIX}username:password${FONT_COLOR_SUFFIX}
-  -o  Pool's url, the arguments like ${BLUE_FONT_PREFIX}mine.pool.example:1234${FONT_COLOR_SUFFIX}
-  -d  Donate level to XMRIG's developers (not me),the arguments like ${BLUE_FONT_PREFIX}1${FONT_COLOR_SUFFIX}"
+  -O  Pool's user and password, the arguments like [username:password]
+  -o  Pool's url, the arguments like [mine.pool.example:1234]
+  -d  Donate level to XMRIG's developers (not me),the arguments like [1]"
 
 #  -o	Overwrite mode, this option is valid at the top
 #  -g	Get the public key from GitHub, the arguments is the GitHub ID
