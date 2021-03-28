@@ -33,8 +33,8 @@ HEAD(){
 
 
 HELLO(){
+  HEAD "Aminer"
   echo "
-${LIGHT_BLUE_FONT_PREFIX}Aminer${FONT_COLOR_SUFFIX}
 Aminer is a script that help you install miner software XMRIG on Android device. @v$VERSION
 You can find the source code from https://github.com/cornjosh/Aminer
 "
