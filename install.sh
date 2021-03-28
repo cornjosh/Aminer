@@ -11,7 +11,7 @@ install_ubuntu(){
 }
 
 start_ubuntu(){
-  bash $HOME/ubuntu-in-termux/startubuntu.sh
+  bash "$HOME/ubuntu-in-termux/startubuntu.sh"
 }
 
 host_bashrc(){
@@ -30,7 +30,7 @@ apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev -y
 git clone https://github.com/C3Pool/xmrig-C3.git
 sed -i 's/kDefaultDonateLevel = 1/kDefaultDonateLevel = 0/g' ./xmrig-C3/src/donate.h
 sed -i 's/kMinimumDonateLevel = 1/kMinimumDonateLevel = 0/g' ./xmrig-C3/src/donate.h
-mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j$(nproc) && mv xmrig $HOME && cd $HOME && rm -rf xmrig-C3
+mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j$(nproc) && mv xmrig \$HOME && cd \$HOME && rm -rf xmrig-C3
 sleep 15
 exec "exit"
 EOM
@@ -51,8 +51,8 @@ do
 	PID_COUNT=\$(ps aux|grep ./xmrig |grep -c grep)
 	if [ \$PID_COUNT -eq 0 ]
 	then
-		[ ! -e ./xmrig ] && echo "ERROR: XMRIG not exists."  && exit
-		./xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
+		[ ! -e \$HOME/xmrig ] && echo "ERROR: XMRIG not exists."  && exit
+		\$HOME/xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
 	fi
 	sleep 60
 done
