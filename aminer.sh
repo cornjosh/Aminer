@@ -396,5 +396,6 @@ while getopts "yO:o:d:" OPT; do
     esac
 done
 
+HELLO
 [ ! -e "$HOME/ubuntu-in-termux/ubuntu-fs/root/service.sh" ] && UBUNTU && TERMUX_BASHRC && UBUNTU_INSTALL_BASHRC && UBUNTU_SERVICE_BASHRC
 UBUNTU_START
