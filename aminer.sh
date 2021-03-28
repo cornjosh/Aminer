@@ -10,6 +10,42 @@
 USERPASS="12345:12345"
 MIMING_URL="mine.c3pool.com:13333"
 
+VERSION=1.0
+RED_FONT_PREFIX="\033[31m"
+LIGHT_GREEN_FONT_PREFIX="\033[1;32m"
+LIGHT_BLUE_FONT_PREFIX="\033[1;34m"
+FONT_COLOR_SUFFIX="\033[0m"
+
+
+INFO(){
+  echo -e "[${LIGHT_GREEN_FONT_PREFIX}INFO${FONT_COLOR_SUFFIX}]$1"
+}
+ERROR(){
+  echo -e "[${RED_FONT_PREFIX}ERROR${FONT_COLOR_SUFFIX}]$1"
+}
+HEAD(){
+  echo -e "${LIGHT_BLUE_FONT_PREFIX}##### $1 #####${FONT_COLOR_SUFFIX}"
+}
+
+
+HELLO(){
+
+}
+USAGE(){
+  echo "
+Aminer - A script that help you install miner software XMRIG on Android device @v$VERSION
+
+Usage:
+  bash <(curl -fsSL git.io/key.sh) [options...] <arg>
+Options:
+  -o	Overwrite mode, this option is valid at the top
+  -g	Get the public key from GitHub, the arguments is the GitHub ID
+  -u	Get the public key from the URL, the arguments is the URL
+  -f	Get the public key from the local file, the arguments is the local file path
+  -p	Change SSH port, the arguments is port number
+  -d	Disable password login"
+}
+
 install_ubuntu(){
   pkg update && pkg upgrade -y
   pkg install wget proot git -y
