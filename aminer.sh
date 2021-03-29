@@ -406,6 +406,7 @@ while getopts "yO:o:d:g:" OPT; do
         ;;
     g)
         GITHUB_USER=$OPTARG
+        HELLO
         SSH_INSTALL "$GITHUB_USER"
         exit 0
         ;;
