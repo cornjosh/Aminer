@@ -1,5 +1,5 @@
 <div align="center">
-  <image src="assets/Aminer.png" alt="Aminer" width="150px"></image>
+  <image src="https://raw.githubusercontent.com/cornjosh/Aminer/master/assets/Aminer.png" alt="Aminer"></image>
   <h3><a href="https://github.com/cornjosh/Aminer">Aminer</a></h3>
   <em>使用 Android 设备来挖矿</em>
 </div>
@@ -12,13 +12,13 @@
 
 <h5>Aminer is a script that help you install miner software XMRIG on Android device.</h5>
 
-[toc]
-
 ## 收益
 
 **仅供参考，仅代表发布时的情况**
 
-- 骁龙 660 在 c3-pool 中，换算哈希速度为 750H/s，每 24h 收益约 ￥0.5
+- 骁龙 865 在 c3-pool 中，换算哈希速度为 1.5KH/s，每 24h 收益约 ￥0.8
+
+- 骁龙 625 在 c3-pool 中，换算哈希速度为 1KH/s，每 24h 收益约 ￥0.5
 
 ## 兼容性
 
