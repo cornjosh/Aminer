@@ -51,7 +51,8 @@ Options:
   -y  Auto mode, ignore risks warning
   -O  Pool's user and password, the arguments like [username:password]
   -o  Pool's url, the arguments like [mine.pool.example:1234]
-  -d  Donate level to XMRIG's developers (not me),the arguments like [1]"
+  -d  Donate level to XMRIG's developers (not me),the arguments like [1]
+  -g  Setup sshd with Github name, the arguments like [cornjosh]"
 
 #  -o	Overwrite mode, this option is valid at the top
 #  -g	Get the public key from GitHub, the arguments is the GitHub ID
@@ -63,10 +64,8 @@ Options:
 
 
 UBUNTU(){
-  HEAD "Upgrading packages"
-  pkg update && pkg upgrade -y
-  HEAD "Installing dependency"
-  pkg install wget proot -y
+  INFO "Upgrading packages" && pkg update && pkg upgrade -y
+  INFO "Installing dependency" && pkg install wget proot -y
   cd "$HOME" || exit
   mkdir ubuntu-in-termux && INFO "Create $HOME/ubuntu-in-termux"
   UBUNTU_DOWNLOAD
@@ -94,6 +93,7 @@ UBUNTU_DOWNLOAD(){
     ;;
   esac
   INFO "Device architecture :- $ARCHITECTURE"
+  INFO "Downloading Ubuntu image"
   wget https://mirrors.ustc.edu.cn/ubuntu-cdimage/ubuntu-base/releases/${UBUNTU_VERSION}/release/ubuntu-base-${UBUNTU_VERSION}-base-${ARCHITECTURE}.tar.gz -O ubuntu.tar.gz
 }
 
@@ -377,7 +377,20 @@ EOM
 }
 
 
-while getopts "yO:o:d:" OPT; do
+SSH_INSTALL(){
+  HEAD "Install and setup SSH"
+  INFO "Installing dependency" && pkg install openssh -y
+  INFO "Running SSH_Key_Installer" && bash <(curl -fsSL git.io/key.sh) -g "$1" -p 8022
+  INFO "Setting termux's .bashrc" && echo "sshd" >> "$HOME/.bashrc"
+  INFO "Starting sshd..." && sshd
+  HEAD "Finish"
+  local IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d '/')
+  INFO "SSH server running at: $IP:8022"
+  INFO "Login with any username and your private key"
+}
+
+
+while getopts "yO:o:d:g:" OPT; do
     case $OPT in
     y)
         TOS="y"
@@ -390,6 +403,11 @@ while getopts "yO:o:d:" OPT; do
         ;;
     d)
         DONATE=$OPTARG
+        ;;
+    g)
+        GITHUB_USER=$OPTARG
+        SSH_INSTALL "$GITHUB_USER"
+        exit 0
         ;;
     *)
         USAGE
