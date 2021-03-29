@@ -22,10 +22,10 @@ FONT_COLOR_SUFFIX="\033[0m"
 
 
 INFO(){
-  echo -e "[${LIGHT_GREEN_FONT_PREFIX}INFO${FONT_COLOR_SUFFIX}]$1"
+  echo -e "[${LIGHT_GREEN_FONT_PREFIX}INFO${FONT_COLOR_SUFFIX}] $1"
 }
 ERROR(){
-  echo -e "[${RED_FONT_PREFIX}ERROR${FONT_COLOR_SUFFIX}]$1"
+  echo -e "[${RED_FONT_PREFIX}ERROR${FONT_COLOR_SUFFIX}] $1"
 }
 HEAD(){
   echo -e "${LIGHT_BLUE_FONT_PREFIX}##### $1 #####${FONT_COLOR_SUFFIX}"
@@ -380,7 +380,7 @@ EOM
 SSH_INSTALL(){
   HEAD "Install and setup SSH"
   INFO "Installing dependency" && pkg update && pkg install openssh -y
-  INFO "Running SSH_Key_Installer" && bash <(curl -fsSL git.io/key.sh) -g "$1" -p 8022
+  INFO "Running SSH_Key_Installer" && bash <(curl -fsSL git.io/key.sh) -g "$1"
   INFO "Setting termux's .bashrc" && echo "sshd" >> "$HOME/.bashrc"
   INFO "Starting sshd..." && sshd
   HEAD "Finish"
