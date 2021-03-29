@@ -327,7 +327,7 @@ sed -i 's/kDefaultDonateLevel = 1/kDefaultDonateLevel = $DONATE/g' ./xmrig-C3/sr
 sed -i 's/kMinimumDonateLevel = 1/kMinimumDonateLevel = $DONATE/g' ./xmrig-C3/src/donate.h
 mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j\$(nproc) && mv xmrig \$HOME && cd \$HOME && rm -rf xmrig-C3
 INFO "XMRIG create success"
-HEAD "Please restart Termux to run XMRIG"
+HEAD "Please restart Termux App to run XMRIG"
 EOM
   echo "[ ! -e ./xmrig ] && bash ./install.sh" >> "$HOME/ubuntu-in-termux/ubuntu-fs/root/.bashrc"
 }
