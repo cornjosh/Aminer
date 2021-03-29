@@ -1,5 +1,5 @@
 <div align="center">
-  <image src="https://raw.githubusercontent.com/cornjosh/Aminer/master/assets/Aminer.png" alt="Aminer"></image>
+  <image src="https://raw.githubusercontent.com/cornjosh/Aminer/master/assets/Aminer.png" alt="Aminer" height="180px"></image>
   <h3><a href="https://github.com/cornjosh/Aminer">Aminer</a></h3>
   <em>使用 Android 设备来挖矿</em>
 </div>
