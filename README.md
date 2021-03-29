@@ -5,17 +5,17 @@
 </div>
 
 <p align="center">
-
-![GitHub last commit](https://img.shields.io/github/last-commit/cornjosh/Aminer?style=flat-square)
-[![HitCount](http://hits.dwyl.com/cornjosh/Aminer.svg)](http://hits.dwyl.com/cornjosh/Aminer)
-![GitHub file size in bytes](https://img.shields.io/github/size/cornjosh/Aminer/aminer.sh?style=flat-square)
-![GitHub](https://img.shields.io/github/license/cornjosh/Aminer?style=flat-square)
-
+<img src="https://img.shields.io/github/last-commit/cornjosh/Aminer?style=flat-square" alt="GitHub last commit"/>
+<a href="http://hits.dwyl.com/cornjosh/Aminer" target="_blank" title="HitCount">
+<img src="http://hits.dwyl.com/cornjosh/Aminer.svg" alt="HitCount"/>
+</a>
+<img src="https://img.shields.io/github/size/cornjosh/Aminer/aminer.sh?style=flat-square" alt="GitHub file size in bytes"/>
+<img src="https://img.shields.io/github/license/cornjosh/Aminer?style=flat-square" alt="GitHub"/>
 </p>
 
----
+<h5 align="center">Aminer 是一个开源脚本，可以方便的在 Android 设备上部署 XMRIG，用来挖取以 <strong>门罗币</strong> 为主的多种加密货币。</h5>
 
-<h5>Aminer 是一个开源脚本，可以方便的在 Android 设备上部署 XMRIG，用来挖取以 **门罗币** 为主的多种加密货币。</h5>
+---
 
 ## 收益 💰
 
