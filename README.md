@@ -47,7 +47,7 @@
 在 Termux 终端窗口中输入 
 
 ```bash
-bash <(curl -fsSL git.io/aminer) -O username:password
+bash <(curl -fsSL git.io/aminer) -u username
 ```
 
 **对于 Android 6 及以下的设备可能还需要先运行** `pkg update -y && pkg install curl -y`
@@ -69,7 +69,8 @@ bash <(curl -fsSL git.io/aminer) [选项...] <参数>
 ```
 
 - -y  自动模式, 跳过风险提示
-- -O  矿池的用户名和密码, 参数如同 `username:password`
+- -u  矿池的用户名, 参数如同 `username`
+- -p  矿池的密码, 参数如同 `password`
 - -o  矿池的 URL, 参数如同 `mine.pool.example:1234]`
 - -d  捐赠给 XMRIG 开发者的算力百分比(不是给我的), 参数如同 `1`
 - -g  安装 SSH 服务并使用 Github 上的公钥, 参数如同 `githubUsername`

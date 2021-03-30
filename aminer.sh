@@ -7,7 +7,8 @@
 # Blog: https://linkyou.top
 #=============================================================
 
-USERPASS="12345:12345"
+USER="12345"
+PASS=''
 MIMING_URL="mine.c3pool.com:13333"
 
 VERSION=1.0
@@ -15,7 +16,6 @@ TOS=''
 UBUNTU_VERSION=20.04.1
 DONATE=1
 RED_FONT_PREFIX="\033[31m"
-BLUE_FONT_PREFIX="\033[34m"
 LIGHT_GREEN_FONT_PREFIX="\033[1;32m"
 LIGHT_BLUE_FONT_PREFIX="\033[1;34m"
 FONT_COLOR_SUFFIX="\033[0m"
@@ -34,22 +34,21 @@ HEAD(){
 
 HELLO(){
   HEAD "Aminer"
-  echo "
-Aminer is a script that help you install miner software XMRIG on Android device. @v$VERSION
+  echo "Aminer is a script that help you install miner software XMRIG on Android device. @v$VERSION
 You can find the source code from https://github.com/cornjosh/Aminer
 "
 [ "$TOS" == '' ] && read -e -p "You are already understand the risks of the script.(Y/n)" TOS
 [ "$TOS" == 'n' ] || [ "$TOS" == 'N' ] && ERROR "Canceled by user" && exit 0
 }
 USAGE(){
-  echo "
-Aminer - A script that help you install miner software XMRIG on Android device @v$VERSION
+  echo "Aminer - A script that help you install miner software XMRIG on Android device @v$VERSION
 
 Usage:
   bash <(curl -fsSL git.io/aminer) [options...] <arg>
 Options:
   -y  Auto mode, ignore risks warning
-  -O  Pool's user and password, the arguments like [username:password]
+  -u  Pool's user, the arguments like [username]
+  -p  Pool's password, the arguments like [password]
   -o  Pool's url, the arguments like [mine.pool.example:1234]
   -d  Donate level to XMRIG's developers (not me),the arguments like [1]
   -g  Setup sshd with Github name, the arguments like [cornjosh]"
@@ -60,6 +59,10 @@ Options:
 #  -f	Get the public key from the local file, the arguments is the local file path
 #  -p	Change SSH port, the arguments is port number
 #  -d	Disable password login
+}
+
+GET_PASS(){
+  [ "$PASS" == '' ] && PASS="Aminer-$(getprop ro.product.vendor.model|sed s/[[:space:]]//g)"
 }
 
 
@@ -366,7 +369,7 @@ do
 	if [ \$PID_COUNT -eq 0 ]
 	then
 		[ ! -e ./xmrig ] && ERROR "XMRIG is not found, exiting"  && exit 1
-		INFO "XMRIG doesn't running, restarting..." && ./xmrig --randomx-mode=light --no-huge-pages -O $USERPASS -o $MIMING_URL
+		INFO "XMRIG doesn't running, restarting..." && ./xmrig --randomx-mode=light --no-huge-pages -u $USER -p $PASS -o $MIMING_URL
 	fi
 	sleep 15
 done
@@ -390,13 +393,16 @@ SSH_INSTALL(){
 }
 
 
-while getopts "yO:o:d:g:" OPT; do
+while getopts "yu:p:o:d:g:" OPT; do
     case $OPT in
     y)
         TOS="y"
         ;;
-    O)
-        USERPASS=$OPTARG
+    u)
+        USER=$OPTARG
+        ;;
+    p)
+        PASS=$OPTARG
         ;;
     o)
         MIMING_URL=$OPTARG
@@ -418,5 +424,6 @@ while getopts "yO:o:d:g:" OPT; do
 done
 
 HELLO
+GET_PASS
 [ ! -e "$HOME/ubuntu-in-termux/ubuntu-fs/root/service.sh" ] && UBUNTU && TERMUX_BASHRC && UBUNTU_SERVICE_BASHRC && UBUNTU_INSTALL_BASHRC
 UBUNTU_START
