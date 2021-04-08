@@ -17,7 +17,9 @@
 
 ## 演示 ✨
 
-![截图](/assets/screen.gif)
+<div align="center">
+    <image src="/assets/screen.gif" alt="screen" height="500px"></image>
+</div>
 
 ## 收益 💰
 
