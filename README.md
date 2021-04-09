@@ -1,7 +1,7 @@
 <div align="center">
   <image src="/assets/miner.png" alt="Aminer" height="200px"></image>
   <h3><a href="https://github.com/cornjosh/Aminer">Aminer</a></h3>
-  <em>使用 Android 设备来挖矿</em>
+  <em>Mining with Android devices</em>
 </div>
 
 <p align="center">
@@ -11,80 +11,104 @@
 <img src="https://img.shields.io/github/license/cornjosh/Aminer" alt="GitHub"/>
 </p>
 
-<h5 align="center">Aminer 是一个开源脚本，可以方便的在 Android 设备上部署 XMRIG，用来挖取以 <strong>门罗币</strong> 为主的多种加密货币。</h5>
+<h5 align="center">Aminer is an open source script that makes it easy to deploy XMRig on Android devices to mine a variety of cryptocurrencies, mainly Monroe Coin.</h5>
 
 ---
 
-## 演示 ✨
+[简体中文版](/README_CN.md)
+
+---
+
+## Screenshots ✨
 
 <div align="center">
     <image src="/assets/screen.gif" alt="screen" height="500px"></image>
 </div>
 
-## 收益 💰
+## Earnings 💰
 
-**仅供参考，仅代表发布时的情况**
+**For reference only and represents only the situation at the time of publication**
 
-- 骁龙 865 在 c3-pool 中，换算哈希速度为 1.5KH/s，每 24h 收益约 ￥0.8
+- Snapdragon 865 in c3-pool, converted hash speed is 1.5KH/s, gain is about ￥0.8 per 24h
 
-- 骁龙 625 在 c3-pool 中，换算哈希速度为 1KH/s，每 24h 收益约 ￥0.5
+- Snapdragon 625 in c3-pool, converted hash rate is 1KH/s, gain is about ￥0.5 per 24h
 
-## 兼容性 📱
+## Compatibility 📱
 
-理论支持 Android 4.4 + 的 64 位设备（arm64、x86
--x64）
+Theoretical support for 64-bit devices with Android 4.4+ (arm64, x86-x64)
 
-✔️ **以下为经过测试的设备，欢迎提 issue 添加**
+✔️ **The following are the tested devices, welcome issue to add**
 
 - Redmi note 2 (Android 5.0/Termux 0.73)
 - Redmi 5 plus (Android 7.0/Termux 0.108)
 - Redmi k30 pro (Android 11/Termux 0.108)
 
-## 快速开始 🚀
+## Quick Start 🚀
 
-### 安装 Termux
+### Install Termux
 
-- Android 7 及以上的设备请安装最新版本的 Termux
+- For Android 7 and above devices, please install the latest version of Termux
 
-- Android 6 及以下的设备请安装 v0.73 版本的 Termux
+- For Android 6 and below, please install Termux version v0.73
 
-### 安装、编译软件
+### Installing and compiling software
 
-在 Termux 终端窗口中输入 
+Run the script in Termux terminal
 
 ```bash
 bash <(curl -fsSL git.io/aminer) -u username
 ```
 
-**对于 Android 6 及以下的设备可能还需要先运行** `pkg update -y && pkg install curl -y`
+**For Android 6 and below devices you may also need to run** `pkg update -y && pkg install curl -y`
 
-默认使用 c3-pool 矿池, 捐赠 1% 给 XMRIG 软件开发者 ( 不是我 ), 可以参考使用说明进行调整
+Default is to use the c3-pool, donate 1% to XMRig software developers (not me), you can adjust it according to the instructions
 
-所有需要的依赖程序将会被自动安装，请确保网络畅通，在安装一些依赖时可能需要您的确认
+All required dependencies will be installed automatically, please make sure you have a good network connection, your confirmation may be required when installing some dependencies
 
-安装需要约 20 分钟(取决于您的网络)
+Installation takes about 20 minutes (depending on your network)
 
-安装完成后，将会看到蓝色的 `##### Please restart Termux to run XMRIG #####`
+Once the installation is complete, you will see the blue tips `##### Please restart Termux to run XMRIG #####`
 
-此时重启 Termux 软件即可自动开始挖矿
+At this point, restart the Termux software to start mining automatically
 
-## 使用 ⌨️
+## Usage ⌨️
 
 ```bash
-bash <(curl -fsSL git.io/aminer) [选项...] <参数>
+bash <(curl -fsSL git.io/aminer) [options...] <arg>
 ```
 
-- -y  自动模式, 跳过风险提示
-- -u  矿池的用户名, 参数如同 `username`
-- -p  矿池的密码, 参数如同 `password`
-- -o  矿池的 URL, 参数如同 `mine.pool.example:1234]`
-- -d  捐赠给 XMRIG 开发者的算力百分比(不是给我的), 参数如同 `1`
-- -g  安装 SSH 服务并使用 Github 上的公钥, 参数如同 `githubUsername`
+- -y  Auto mode, ignore risks warning
+- -u  Pool's user, the arguments like `username`
+- -p  Pool's password, the arguments like `password`
+- -o  Pool's url, the arguments like `mine.pool.example:1234]`
+- -d  Donate level to XMRIG's developers (not me),the arguments like `1`
+- -g  Setup sshd with Github name, the arguments like `githubUsername`
+
+## Feature
+
+- [x] daemon (automatic restart for unexpected exit)
+- [x] Autostart (open APP to start itself)
+- [ ] Boot self-start (no clue yet)
 
 
-## 致谢 💐
 
-参考或引用了以下项目：
+- [x] Customize mining pool (not limited to c3-pool anymore)
+- [x] Auto-get device name (for Android, c3-pool)
+
+
+
+- [x] Ubuntu container domestic mirror (USTC source)
+- [ ] Termux software source domestic mirror (Tsinghua source does not seem to support older versions)
+- [ ] Ubuntu software source domestic mirror (lazy)
+
+
+
+- [x] One-click setup SSH server (use P3TERX's script)
+
+
+## Thanks 💐
+
+The following items are referenced or cited：
 
 - [SSH Key Installer](https://github.com/P3TERX/SSH_Key_Installer)
 
