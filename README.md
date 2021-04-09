@@ -80,11 +80,11 @@ bash <(curl -fsSL git.io/aminer) [options...] <arg>
 - -y  Auto mode, ignore risks warning
 - -u  Pool's user, the arguments like `username`
 - -p  Pool's password, the arguments like `password`
-- -o  Pool's url, the arguments like `mine.pool.example:1234]`
+- -o  Pool's url, the arguments like `mine.pool.example:1234`
 - -d  Donate level to XMRIG's developers (not me),the arguments like `1`
 - -g  Setup sshd with Github name, the arguments like `githubUsername`
 
-## Feature
+## Feature 👍
 
 - [x] daemon (automatic restart for unexpected exit)
 - [x] Autostart (open APP to start itself)

@@ -81,11 +81,11 @@ bash <(curl -fsSL git.io/aminer) [选项...] <参数>
 - -y  自动模式, 跳过风险提示
 - -u  矿池的用户名, 参数如同 `username`
 - -p  矿池的密码, 参数如同 `password`
-- -o  矿池的 URL, 参数如同 `mine.pool.example:1234]`
+- -o  矿池的 URL, 参数如同 `mine.pool.example:1234`
 - -d  捐赠给 XMRIG 开发者的算力百分比(不是给我的), 参数如同 `1`
 - -g  安装 SSH 服务并使用 Github 上的公钥, 参数如同 `githubUsername`
 
-## 功能
+## 功能 👍
 
 - [x] 守护程序（意外退出自动重启）
 - [x] 自动启动（打开 APP 自启）
