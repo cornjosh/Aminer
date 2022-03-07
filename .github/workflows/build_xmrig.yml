@@ -45,7 +45,7 @@ jobs:
         run: |
           sudo su
           mkdir build && cd scripts
-          ./bash build_deps.sh && cd ../build
+          ./build_deps.sh && cd ../build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DXMRIG_DEPS=scripts/deps
           make -j$(nproc)
           
@@ -54,7 +54,7 @@ jobs:
         run: |
           sudo su
           mkdir build && cd scripts
-          ./bash build_deps.sh && cd ../build
+          ./build_deps.sh && cd ../build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=${{ matrix.arm_target }} -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF -DWITH_ASM=OFF -DXMRIG_DEPS=scripts/deps
           make -j$(nproc)
           
