@@ -19,6 +19,7 @@ jobs:
     name: Build ${{ matrix.repo }} on x86/arm v${{ matrix.arm_target }} 
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
         arm_target: ['0', '7', '8']
         repo: [xmrig/xmrig, C3Pool/xmrig-C3]
@@ -43,7 +44,7 @@ jobs:
         if: matrix.arm_target == '0'
         run: |
           mkdir build && cd scripts
-          sudo ./build_deps.sh && cd ../build
+          sudo bash build_deps.sh && cd ../build
           sudo cmake .. -DCMAKE_BUILD_TYPE=Release -DXMRIG_DEPS=scripts/deps
           sudo make -j$(nproc)
           
@@ -51,7 +52,7 @@ jobs:
         if: matrix.arm_target != '0'
         run: |
           mkdir build && cd scripts
-          sudo ./build_deps.sh && cd ../build
+          sudo bash build_deps.sh && cd ../build
           sudo cmake .. -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=${{ matrix.arm_target }} -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF -DWITH_ASM=OFF -DXMRIG_DEPS=scripts/deps
           sudo make -j$(nproc)
           
