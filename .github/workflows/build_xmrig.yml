@@ -25,10 +25,6 @@ jobs:
         repo: [xmrig/xmrig, C3Pool/xmrig-C3]
         
     steps:
-      - name: Switch to root
-        run: |
-          sudo su
-      
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
@@ -47,6 +43,7 @@ jobs:
       - name: Full static compile x86
         if: matrix.arm_target == '0'
         run: |
+          sudo su
           mkdir build && cd scripts
           ./bash build_deps.sh && cd ../build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DXMRIG_DEPS=scripts/deps
@@ -55,6 +52,7 @@ jobs:
       - name: Full static compile arm
         if: matrix.arm_target != '0'
         run: |
+          sudo su
           mkdir build && cd scripts
           ./bash build_deps.sh && cd ../build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=${{ matrix.arm_target }} -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF -DWITH_ASM=OFF -DXMRIG_DEPS=scripts/deps
