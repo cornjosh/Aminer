@@ -37,8 +37,8 @@ jobs:
 
       - name: Setup environment
         run: |
-          apt update
-          apt install build-essential cmake automake libtool autoconf
+          sudo apt update
+          sudo apt install build-essential cmake automake libtool autoconf
           
       - name: Full static compile x86
         if: matrix.arm_target == '0'
