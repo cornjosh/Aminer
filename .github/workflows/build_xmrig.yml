@@ -24,22 +24,34 @@ jobs:
         repo: [xmrig/xmrig, C3Pool/xmrig-C3]
         
     steps:
-      - name: Checkout Repo
+      - name: Checkout repo
         uses: actions/checkout@v2
         with:
           repository: ${{ matrix.repo }}
           
-      - name: Echo XMRig Version
+      - name: Echo XMRig version
         run: |
           echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'`
           echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'` >> $GITHUB_ENV
 
-      - name: Setup Environment
+      - name: Setup environment
         run: |
           sudo apt update
           sudo apt install build-essential cmake automake libtool autoconf
-          mkdir xmrig/build && cd xmrig/scripts
+          
+      - name: Full static compile x86
+        if: matrix.arm_target == '0'
+        run: |
+          mkdir build && cd scripts
           ./build_deps.sh && cd ../build
-          cmake .. -DXMRIG_DEPS=scripts/deps
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DXMRIG_DEPS=scripts/deps
+          make -j$(nproc)
+          
+      - name: Full static compile arm
+        if: matrix.arm_target != '0'
+        run: |
+          mkdir build && cd scripts
+          ./build_deps.sh && cd ../build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=${{ matrix.arm_target }} -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF -DWITH_ASM=OFF -DXMRIG_DEPS=scripts/deps
           make -j$(nproc)
           
