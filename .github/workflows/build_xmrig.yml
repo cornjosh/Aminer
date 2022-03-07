@@ -21,6 +21,7 @@ jobs:
     strategy:
       matrix:
         arm_target: ['0', '7', '8']
+        repo: [xmrig/xmrig, C3Pool/xmrig-C3]
         
     steps:
       - name: Checkout Repo
@@ -28,6 +29,17 @@ jobs:
         with:
           repository: xmrig/xmrig
           
-      - name: Echo Version
+      - name: Echo XMRig Version
         run: |
           echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'`
+          echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'` >> $GITHUB_ENV
+
+      - name: Setup Environment
+        run: |
+          apt update
+          apt install build-essential cmake automake libtool autoconf
+          mkdir xmrig/build && cd xmrig/scripts
+          ./build_deps.sh && cd ../build
+          cmake .. -DXMRIG_DEPS=scripts/deps
+          make -j$(nproc)
+          
