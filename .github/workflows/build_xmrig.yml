@@ -16,7 +16,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    name: Build on x86/arm v${{ matrix.arm_target }}
+    name: Build ${{ matrix.repo }} on x86/arm v${{ matrix.arm_target }} 
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
         with:
-          repository: xmrig/xmrig
+          repository: ${{ matrix.repo }}
           
       - name: Echo XMRig Version
         run: |
@@ -36,8 +36,8 @@ jobs:
 
       - name: Setup Environment
         run: |
-          apt update
-          apt install build-essential cmake automake libtool autoconf
+          sudo apt update
+          sudo apt install build-essential cmake automake libtool autoconf
           mkdir xmrig/build && cd xmrig/scripts
           ./build_deps.sh && cd ../build
           cmake .. -DXMRIG_DEPS=scripts/deps
