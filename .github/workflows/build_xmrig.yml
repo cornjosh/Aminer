@@ -16,45 +16,96 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    name: Build ${{ matrix.repo }} on x86/arm v${{ matrix.arm_target }} 
+    name: Build ${{ matrix.repo }} on ${{ matrix.arm_target }} 
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        arm_target: ['0', '7', '8']
-        repo: [xmrig/xmrig, C3Pool/xmrig-C3]
+        arm_target: [linux/amd64,linux/arm64,linux/arm/v7]
+        repo: [xmrig/xmrig]
         
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Run container
+        run: |
+          docker run --platform=${{ matrix.arm_target }} --name=builder alpine
+          
+      - name: Build x64
+        if: matrix.arm_target == "linux/amd64"
+        run: |
+          docker exec builder /bin/sh -c " \
+          apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
+          git clone https://github.com/${{ matrix.repo }}.git; \
+          mkdir xmrig/build; \
+          cd xmrig/scripts && ./build_deps.sh && cd ../build; \
+          cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON; \
+          make -j1
+          "
+      - name: Build armv8
+        if: matrix.arm_target == "linux/arm64"
+        run: |
+          docker exec builder /bin/sh -c " \
+          apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
+          git clone https://github.com/${{ matrix.repo }}.git; \
+          mkdir xmrig/build; \
+          cd xmrig/scripts && ./build_deps.sh && cd ../build; \
+          cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=8 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
+          make -j1
+          "
+    
+      - name: Build armv7
+        if: matrix.arm_target == "linux/arm/v7"
+        run: |
+          docker exec builder /bin/sh -c " \
+          apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
+          git clone https://github.com/${{ matrix.repo }}.git; \
+          mkdir xmrig/build; \
+          cd xmrig/scripts && ./build_deps.sh && cd ../build; \
+          cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=7 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
+          make -j1
+          "
+      - name: Copy to host
+        run: |
+          docker cp builder:/xmrig/build/xmrig xmrig
+    
+      - name: Upload to artifact
+        uses: actions/upload-artifact@v3
         with:
-          repository: ${{ matrix.repo }}
+          name: ${{ matrix.arm_target }}
+          path: xmrig
+#       - name: Checkout repo
+#         uses: actions/checkout@v2
+#         with:
+#           repository: ${{ matrix.repo }}
           
-      - name: Echo XMRig version
-        run: |
-          echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'`
-          echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'` >> $GITHUB_ENV
+#       - name: Echo XMRig version
+#         run: |
+#           echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'`
+#           echo "XMRIG_VERSION="`cat src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'` >> $GITHUB_ENV
 
-      - name: Setup environment
-        run: |
-          sudo apt update
-          sudo apt install build-essential cmake automake libtool autoconf
+#       - name: Setup environment
+#         run: |
+#           sudo apt update
+#           sudo apt install build-essential cmake automake libtool autoconf
           
-      - name: Full static compile x86
-        if: matrix.arm_target == '0'
-        run: |
-          sudo su
-          mkdir build && cd scripts
-          ./build_deps.sh && cd ../build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DXMRIG_DEPS=scripts/deps
-          make -j$(nproc)
+#       - name: Full static compile x86
+#         if: matrix.arm_target == '0'
+#         run: |
+#           sudo su
+#           mkdir build && cd scripts
+#           ./build_deps.sh && cd ../build
+#           cmake .. -DCMAKE_BUILD_TYPE=Release -DXMRIG_DEPS=scripts/deps
+#           make -j$(nproc)
           
-      - name: Full static compile arm
-        if: matrix.arm_target != '0'
-        run: |
-          sudo su
-          mkdir build && cd scripts
-          ./build_deps.sh && cd ../build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=${{ matrix.arm_target }} -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF -DWITH_ASM=OFF -DXMRIG_DEPS=scripts/deps
-          make -j$(nproc)
+#       - name: Full static compile arm
+#         if: matrix.arm_target != '0'
+#         run: |
+#           sudo su
+#           mkdir build && cd scripts
+#           ./build_deps.sh && cd ../build
+#           cmake .. -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=${{ matrix.arm_target }} -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF -DWITH_ASM=OFF -DXMRIG_DEPS=scripts/deps
+#           make -j$(nproc)
           
