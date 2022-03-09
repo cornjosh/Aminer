@@ -31,7 +31,7 @@ jobs:
         
       - name: Run container
         run: |
-          docker run --platform=${{ matrix.platform }} --name=builder alpine
+          docker run --platform=${{ matrix.platform }} --name=builder -dit alpine
           
       - name: Build x64
         if: matrix.platform == 'linux/amd64'
