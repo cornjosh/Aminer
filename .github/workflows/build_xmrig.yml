@@ -34,7 +34,7 @@ jobs:
           docker run --platform=${{ matrix.platform }} --name=builder alpine
           
       - name: Build x64
-        if: matrix.platform == "linux/amd64"
+        if: matrix.platform == 'linux/amd64'
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
@@ -45,7 +45,7 @@ jobs:
           make -j1
           "
       - name: Build armv8
-        if: matrix.platform == "linux/arm64"
+        if: matrix.platform == 'linux/arm64'
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
@@ -57,7 +57,7 @@ jobs:
           "
     
       - name: Build armv7
-        if: matrix.platform == "linux/arm/v7"
+        if: matrix.platform == 'linux/arm/v7'
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
