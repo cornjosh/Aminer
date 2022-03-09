@@ -71,9 +71,14 @@ jobs:
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=7 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
           make -j1
           "
+          
       - name: Copy to host
         run: |
           docker cp builder:/xmrig/build/xmrig xmrig
+          
+#       - name: Get XMRig version
+#         run: |
+#           echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}''` >> $GITHUB_ENV
     
       - name: Upload artifact
         uses: actions/upload-artifact@v3
