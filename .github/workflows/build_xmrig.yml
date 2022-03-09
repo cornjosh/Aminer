@@ -36,6 +36,7 @@ jobs:
       - name: Get arch
         run: |
           echo "ARCH="`docker exec builder arch` >> $GITHUB_ENV
+          echo "ARCH="`docker exec builder arch`
           
       - name: Build x64
         if: matrix.platform == 'linux/amd64'
@@ -76,9 +77,10 @@ jobs:
         run: |
           docker cp builder:/xmrig/build/xmrig xmrig
           
-#       - name: Get XMRig version
-#         run: |
-#           echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}''` >> $GITHUB_ENV
+      - name: Get XMRig version
+        run: |
+          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''` >> $GITHUB_ENV
+          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''`
     
       - name: Upload artifact
         uses: actions/upload-artifact@v3
