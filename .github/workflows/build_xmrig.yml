@@ -33,6 +33,10 @@ jobs:
         run: |
           docker run --platform=${{ matrix.platform }} --name=builder -dit alpine
           
+      - name: Get arch
+        run: |
+          echo "ARCH="`docker exec builder arch` >> $GITHUB_ENV
+          
       - name: Build x64
         if: matrix.platform == 'linux/amd64'
         run: |
@@ -71,10 +75,10 @@ jobs:
         run: |
           docker cp builder:/xmrig/build/xmrig xmrig
     
-      - name: Upload to artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.platform }}
+          name: xmrig-${{ env.ARCH }}
           path: xmrig
 #       - name: Checkout repo
 #         uses: actions/checkout@v2
