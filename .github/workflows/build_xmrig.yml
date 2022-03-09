@@ -16,13 +16,13 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    name: Build ${{ matrix.repo }} on ${{ matrix.arm_target }} 
+    name: Build ${{ matrix.repo }} on ${{ matrix.platform }} 
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        arm_target: [linux/amd64,linux/arm64,linux/arm/v7]
-        repo: [xmrig/xmrig]
+        platform: ["linux/amd64", "linux/arm64", "linux/arm/v7"]
+        repo: ["xmrig/xmrig"]
         
     steps:
       - name: Set up QEMU
@@ -31,10 +31,10 @@ jobs:
         
       - name: Run container
         run: |
-          docker run --platform=${{ matrix.arm_target }} --name=builder alpine
+          docker run --platform=${{ matrix.platform }} --name=builder alpine
           
       - name: Build x64
-        if: matrix.arm_target == "linux/amd64"
+        if: matrix.platform == "linux/amd64"
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
@@ -45,7 +45,7 @@ jobs:
           make -j1
           "
       - name: Build armv8
-        if: matrix.arm_target == "linux/arm64"
+        if: matrix.platform == "linux/arm64"
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
@@ -57,7 +57,7 @@ jobs:
           "
     
       - name: Build armv7
-        if: matrix.arm_target == "linux/arm/v7"
+        if: matrix.platform == "linux/arm/v7"
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
@@ -74,7 +74,7 @@ jobs:
       - name: Upload to artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.arm_target }}
+          name: ${{ matrix.platform }}
           path: xmrig
 #       - name: Checkout repo
 #         uses: actions/checkout@v2
