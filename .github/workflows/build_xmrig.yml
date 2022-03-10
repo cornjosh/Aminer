@@ -57,6 +57,7 @@ jobs:
         if: ${{ matrix.platform != 'linux/arm64' && matrix.platform != 'linux/arm/v7' }}
         run: |
           docker exec builder /bin/sh -c " \
+          chmod -R 777 xmrig; \
           mkdir xmrig/build; \
           cd xmrig/scripts && ./build_deps.sh && cd ../build; \
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON; \
@@ -67,6 +68,7 @@ jobs:
         if: matrix.platform == 'linux/arm64'
         run: |
           docker exec builder /bin/sh -c " \
+          chmod -R 777 xmrig; \
           mkdir xmrig/build; \
           cd xmrig/scripts && ./build_deps.sh && cd ../build; \
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=8 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
@@ -77,6 +79,7 @@ jobs:
         if: matrix.platform == 'linux/arm/v7'
         run: |
           docker exec builder /bin/sh -c " \
+          chmod -R 777 xmrig; \
           mkdir xmrig/build; \
           cd xmrig/scripts && ./build_deps.sh && cd ../build; \
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=7 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
