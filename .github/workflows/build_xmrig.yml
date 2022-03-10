@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: ["linux/amd64", "linux/arm64", "linux/arm/v7"]
+        platform: ["linux/amd64", "linux/386", "linux/arm64", "linux/arm/v7"]
         repo: ["xmrig/xmrig"]
         
     steps:
@@ -46,8 +46,8 @@ jobs:
           echo "PLATFORM="`echo "${{ matrix.platform }}" | sed 's/\//_/g'`
           echo "REPO="`echo "${{ matrix.repo }}" | sed 's/\//_/g'` >> $GITHUB_ENV
           echo "REPO="`echo "${{ matrix.repo }}" | sed 's/\//_/g'`
-          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''` >> $GITHUB_ENV
-          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''`
+          echo "XMRIG_VERSION="`docker exec builder cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'` >> $GITHUB_ENV
+          echo "XMRIG_VERSION="`docker exec builder cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" '{print $2}'`          
           
       - name: Build other
         if: ${{ matrix.platform != 'linux/arm64' && matrix.platform != 'linux/arm/v7' }}
