@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: ["linux/amd64", "linux/386", "linux/arm64", "linux/arm/v7"]
+        platform: ["linux/amd64", "linux/arm64", "linux/arm/v7"]
         repo: ["xmrig/xmrig", "C3Pool/xmrig-C3"]
         
     steps:
