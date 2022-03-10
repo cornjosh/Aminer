@@ -22,22 +22,26 @@ jobs:
       fail-fast: false
       matrix:
         platform: ["linux/amd64", "linux/386", "linux/arm64", "linux/arm/v7"]
-        repo: ["xmrig/xmrig"]
+        repo: ["xmrig/xmrig", "C3Pool/xmrig-C3"]
         
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ matrix.repo }}
+    
       - name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v1
         
       - name: Run container
         run: |
-          docker run --platform=${{ matrix.platform }} --name=builder -dit alpine
+          docker run --platform=${{ matrix.platform }} --name=builder -dit -v "$(pwd):/xmrig" alpine
           
-      - name: Checkout repo
+      - name: Install dependent
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
-          git clone https://github.com/${{ matrix.repo }}.git; \
           "
     
       - name: Get information
