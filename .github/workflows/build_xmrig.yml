@@ -33,28 +33,36 @@ jobs:
         run: |
           docker run --platform=${{ matrix.platform }} --name=builder -dit alpine
           
-      - name: Get arch
-        run: |
-          echo "ARCH="`docker exec builder arch` >> $GITHUB_ENV
-          echo "ARCH="`docker exec builder arch`
-          
-      - name: Build x64
-        if: matrix.platform == 'linux/amd64'
+      - name: Checkout repo
         run: |
           docker exec builder /bin/sh -c " \
           apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
           git clone https://github.com/${{ matrix.repo }}.git; \
+          "
+    
+      - name: Get information
+        run: |
+          echo "PLATFORM="`echo "${{ matrix.platform }}" | sed 's/\//_/g'` >> $GITHUB_ENV
+          echo "PLATFORM="`echo "${{ matrix.platform }}" | sed 's/\//_/g'`
+          echo "REPO="`echo "${{ matrix.repo }}" | sed 's/\//_/g'` >> $GITHUB_ENV
+          echo "REPO="`echo "${{ matrix.repo }}" | sed 's/\//_/g'`
+          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''` >> $GITHUB_ENV
+          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''`
+          
+      - name: Build other
+        if: ${{ matrix.platform != 'linux/arm64' && matrix.platform != 'linux/arm/v7' }}
+        run: |
+          docker exec builder /bin/sh -c " \
           mkdir xmrig/build; \
           cd xmrig/scripts && ./build_deps.sh && cd ../build; \
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON; \
           make -j1
           "
-      - name: Build armv8
+          
+      - name: Build arm64
         if: matrix.platform == 'linux/arm64'
         run: |
           docker exec builder /bin/sh -c " \
-          apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
-          git clone https://github.com/${{ matrix.repo }}.git; \
           mkdir xmrig/build; \
           cd xmrig/scripts && ./build_deps.sh && cd ../build; \
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=8 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
@@ -65,8 +73,6 @@ jobs:
         if: matrix.platform == 'linux/arm/v7'
         run: |
           docker exec builder /bin/sh -c " \
-          apk add git make cmake libstdc++ gcc g++ automake libtool autoconf linux-headers; \
-          git clone https://github.com/${{ matrix.repo }}.git; \
           mkdir xmrig/build; \
           cd xmrig/scripts && ./build_deps.sh && cd ../build; \
           cmake .. -DXMRIG_DEPS=scripts/deps -DBUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DARM_TARGET=7 -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_HWLOC=OFF; \
@@ -77,15 +83,10 @@ jobs:
         run: |
           docker cp builder:/xmrig/build/xmrig xmrig
           
-      - name: Get XMRig version
-        run: |
-          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''` >> $GITHUB_ENV
-          echo "XMRIG_VERSION="`docker exec builder /bin/sh -c'cat /xmrig/src/version.h | grep -Eo "APP_VERSION\s+\"(.+?)\"" | awk -F "\"" \'{print $2}\''`
-    
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: xmrig-${{ env.ARCH }}
+          name: ${{ env.REPO }}_${{ env.XMRIG_VERSION }}_${{ env.PLATFORM }}
           path: xmrig
 #       - name: Checkout repo
 #         uses: actions/checkout@v2
