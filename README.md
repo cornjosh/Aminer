@@ -5,13 +5,17 @@
 </div>
 
 <p align="center">
-<img src="https://img.shields.io/github/last-commit/cornjosh/Aminer" alt="GitHub last commit"/>
-<img src="https://visitor-badge.glitch.me/badge?page_id=cornjosh.Aminer" alt="visitor badge"/>
-<img src="https://img.shields.io/github/size/cornjosh/Aminer/aminer.sh" alt="GitHub file size in bytes"/>
-<img src="https://img.shields.io/github/license/cornjosh/Aminer" alt="GitHub"/>
+<img src="https://img.shields.io/github/stars/cornjosh/Aminer?style=flat-square" alt="GitHub Stars"/>
+<img src="https://img.shields.io/github/forks/cornjosh/Aminer?style=flat-square" alt="GitHub Forks"/>
+<img src="https://img.shields.io/github/issues/cornjosh/Aminer?style=flat-square" alt="GitHub Issues"/>
+<img src="https://img.shields.io/github/last-commit/cornjosh/Aminer?style=flat-square" alt="GitHub last commit"/>
+<img src="https://img.shields.io/github/license/cornjosh/Aminer?style=flat-square" alt="GitHub License"/>
+<img src="https://img.shields.io/github/size/cornjosh/Aminer/aminer.sh?style=flat-square" alt="Script Size"/>
 </p>
 
-<h5 align="center">Aminer is an open source script that makes it easy to deploy XMRig on Android devices to mine a variety of cryptocurrencies, mainly Monroe Coin.</h5>
+<h5 align="center">Aminer is an open source script that makes it easy to deploy XMRig on Android devices to mine cryptocurrencies, primarily Monero (XMR). Perfect for utilizing spare Android devices for lightweight cryptocurrency mining.</h5>
+
+> ⚠️ **Security Notice**: Cryptocurrency mining may drain your device's battery and generate heat. Use at your own risk and ensure proper ventilation. Only use trusted mining pools and be aware of electricity costs.
 
 ---
 
@@ -27,92 +31,235 @@
 
 ## Earnings 💰
 
-**For reference only and represents only the situation at the time of publication**
+**⚠️ Important Disclaimer: These figures are for reference only and represent the situation at the time of publication. Actual earnings may vary significantly based on:**
 
-- Snapdragon 865 in c3-pool, converted hash speed is 1.5KH/s, gain is about ￥0.8 per 24h
+- Current network difficulty
+- Market prices
+- Pool fees
+- Device performance
+- Electricity costs
 
-- Snapdragon 625 in c3-pool, converted hash rate is 1KH/s, gain is about ￥0.5 per 24h
+**Historical Reference Data:**
+- Snapdragon 865 in c3-pool: ~1.5KH/s hash rate, estimated ￥0.8 per 24h
+- Snapdragon 625 in c3-pool: ~1KH/s hash rate, estimated ￥0.5 per 24h
+
+> 💡 **Performance Note**: Mining performance varies greatly between devices. Consider your electricity costs and device wear before mining.
 
 ## Compatibility 📱
 
-Theoretical support for 64-bit devices with Android 4.4+ (arm64, x86-x64)
+**System Requirements:**
+- Android 4.4+ (API level 19+)
+- 64-bit architecture (arm64, x86-64)
+- At least 2GB RAM recommended
+- Stable internet connection
+- Termux app installed
 
-✔️ **The following are the tested devices, welcome issue to add**
+**Termux Version Compatibility:**
+- **Android 7+**: Use latest Termux from F-Droid or GitHub
+- **Android 6 and below**: Use Termux v0.73
 
-- Redmi note 2 (Android 5.0/Termux 0.73)
-- Redmi 5 plus (Android 7.0/Termux 0.108)
-- Redmi k30 pro (Android 11/Termux 0.108)
+✅ **Tested Devices:**
+| Device | Android Version | Termux Version | Status |
+|--------|----------------|----------------|---------|
+| Redmi Note 2 | 5.0 | 0.73 | ✅ Working |
+| Redmi 5 Plus | 7.0 | 0.108 | ✅ Working |
+| Redmi K30 Pro | 11 | 0.108 | ✅ Working |
+
+> 📝 **Note**: Feel free to open an issue to report compatibility with your device!
 
 ## Quick Start 🚀
 
-### Install Termux
+### Prerequisites
 
-- For Android 7 and above devices, please install the latest version of Termux
+1. **Install Termux:**
+   - **Android 7+**: Download from [F-Droid](https://f-droid.org/en/packages/com.termux/) or [GitHub Releases](https://github.com/termux/termux-app/releases)
+   - **Android 6 and below**: Install Termux v0.73 (legacy version)
 
-- For Android 6 and below, please install Termux version v0.73
+2. **Prepare Termux Environment:**
+   ```bash
+   # For older Android versions, update package lists first
+   pkg update -y && pkg install curl -y
+   ```
 
-### Installing and compiling software
+### Installation
 
-Run the script in Termux terminal
+Run the following command in your Termux terminal:
 
 ```bash
-bash <(curl -fsSL git.io/aminer) -u username
+bash <(curl -fsSL git.io/aminer) -u your_wallet_address
 ```
 
-**For Android 6 and below devices you may also need to run** `pkg update -y && pkg install curl -y`
+**Example:**
+```bash
+bash <(curl -fsSL git.io/aminer) -u 45xh7ksV8w4...your_monero_address
+```
 
-Default is to use the c3-pool, donate 1% to XMRig software developers (not me), you can adjust it according to the instructions
+### What Happens During Installation
 
-All required dependencies will be installed automatically, please make sure you have a good network connection, your confirmation may be required when installing some dependencies
+1. ⬇️ Downloads and installs Ubuntu container
+2. 🔧 Installs build dependencies (git, cmake, gcc, etc.)
+3. 📦 Compiles XMRig from source
+4. ⚙️ Configures mining parameters
+5. 🎯 Sets up daemon for automatic restart
 
-Installation takes about 20 minutes (depending on your network)
+**Installation Time**: ~20 minutes (depends on your internet speed)
 
-Once the installation is complete, you will see the blue tips `##### Please restart Termux to run XMRIG #####`
+**Success Indicator**: You'll see the blue message:
+```
+##### Please restart Termux to run XMRIG #####
+```
 
-At this point, restart the Termux software to start mining automatically
+### Start Mining
+
+1. **Close and reopen Termux** - Mining will start automatically
+2. **Monitor Progress** - Check your pool dashboard for statistics
+3. **View Logs** - Mining output will be displayed in the terminal
+
+> ⚠️ **Important**: Make sure your device has good ventilation and consider the impact on battery life.
 
 ## Usage ⌨️
 
+### Basic Usage
+
 ```bash
-bash <(curl -fsSL git.io/aminer) [options...] <arg>
+bash <(curl -fsSL git.io/aminer) [options...] <arguments>
 ```
 
-- -y  Auto mode, ignore risks warning
-- -u  Pool's user, the arguments like `username`
-- -p  Pool's password, the arguments like `password`
-- -o  Pool's url, the arguments like `mine.pool.example:1234`
-- -d  Donate level to XMRIG's developers (not me),the arguments like `1`
-- -g  Setup sshd with Github name, the arguments like `githubUsername`
+### Command Line Options
 
-## Feature 👍
+| Option | Description | Example |
+|--------|-------------|---------|
+| `-y` | Auto mode (skip risk warnings) | `-y` |
+| `-u` | Mining pool username/wallet | `-u 45xh7ks...` |
+| `-p` | Mining pool password | `-p worker_name` |
+| `-o` | Mining pool URL and port | `-o mine.pool.com:1234` |
+| `-d` | Donation level to XMRig developers | `-d 1` |
+| `-g` | Setup SSH with GitHub username | `-g your_github_user` |
 
-- [x] daemon (automatic restart for unexpected exit)
-- [x] Autostart (open APP to start itself)
-- [ ] Boot self-start (no clue yet)
+### Examples
+
+**Basic mining with custom wallet:**
+```bash
+bash <(curl -fsSL git.io/aminer) -u your_monero_wallet_address
+```
+
+**Custom pool and settings:**
+```bash
+bash <(curl -fsSL git.io/aminer) -u wallet -p worker1 -o pool.example.com:4444 -d 0
+```
+
+**Auto-install with SSH setup:**
+```bash
+bash <(curl -fsSL git.io/aminer) -y -u wallet -g github_username
+```
+
+### Post-Installation Commands
+
+**Check mining status:**
+```bash
+./ubuntu.sh
+ps aux | grep xmrig
+```
+
+**Stop mining:**
+```bash
+./ubuntu.sh
+pkill xmrig
+```
+
+**Restart mining:**
+```bash
+./ubuntu.sh
+./service.sh
+```
+
+## Features 👍
+
+### ⚡ Mining Management
+- [x] **Daemon Process** - Automatic restart on unexpected exit
+- [x] **Auto-start** - Mining begins when Termux app opens
+- [ ] **Boot Auto-start** - Start mining on device boot *(work in progress)*
+
+### 🎯 Pool Configuration
+- [x] **Custom Mining Pools** - Not limited to c3-pool anymore
+- [x] **Auto Device Detection** - Automatically gets device name for pool identification
+- [x] **Flexible Pool Settings** - Support for any Monero-compatible pool
+
+### 🏗️ System Features
+- [x] **Ubuntu Container** - Uses domestic mirrors (USTC source for faster downloads)
+- [x] **SSH Server Setup** - One-click SSH configuration using P3TERX's script
+- [ ] **Termux Mirror** - Domestic software sources *(Tsinghua mirror compatibility issues)*
+- [ ] **Ubuntu Software Mirror** - Additional speed optimizations *(planned)*
+
+### 🔧 Advanced Options
+- [x] **Configurable Donation** - Adjust XMRig developer donation percentage
+- [x] **Custom Worker Names** - Personalized worker identification
+- [x] **Automatic Dependencies** - All required packages installed automatically
+- [x] **Error Recovery** - Robust error handling and recovery mechanisms
+
+### 📊 Monitoring & Logs
+- [x] **Real-time Output** - View mining progress in terminal
+- [x] **Process Monitoring** - Automatic detection of mining status
+- [x] **Resource Management** - Optimized for mobile devices
 
 
+## Contributing 🤝
 
-- [x] Customize mining pool (not limited to c3-pool anymore)
-- [x] Auto-get device name (for Android, c3-pool)
+We welcome contributions to improve Aminer! Here's how you can help:
 
+### 🐛 Bug Reports
+- Open an issue describing the problem
+- Include device model, Android version, and Termux version
+- Provide logs and steps to reproduce
 
+### 💡 Feature Requests
+- Suggest new features or improvements
+- Explain the use case and benefits
 
-- [x] Ubuntu container domestic mirror (USTC source)
-- [ ] Termux software source domestic mirror (Tsinghua source does not seem to support older versions)
-- [ ] Ubuntu software source domestic mirror (lazy)
+### 📝 Documentation
+- Help improve README translations
+- Add device compatibility information
+- Write tutorials and guides
 
+### 💻 Code Contributions
+- Fork the repository
+- Create a feature branch
+- Submit a pull request with clear description
 
+## Troubleshooting 🔧
 
-- [x] One-click setup SSH server (use P3TERX's script)
+### Common Issues
 
+**Installation fails:**
+- Ensure stable internet connection
+- Try using a VPN if in regions with network restrictions
+- Check available storage space (needs ~500MB)
+
+**Mining doesn't start:**
+- Restart Termux completely
+- Check if XMRig binary exists: `ls ~/ubuntu-in-termux/ubuntu-fs/root/xmrig`
+- Review installation logs for errors
+
+**Low hash rate:**
+- Close other apps to free up CPU resources
+- Ensure device isn't thermal throttling
+- Check pool connection status
+
+**Need Help?**
+- 📧 Open an issue on GitHub
+- 🔍 Check existing issues for solutions
+- 📱 Verify your device meets minimum requirements
 
 ## Thanks 💐
 
-The following items are referenced or cited：
+This project builds upon the excellent work of:
 
-- [SSH Key Installer](https://github.com/P3TERX/SSH_Key_Installer)
+- [**SSH Key Installer**](https://github.com/P3TERX/SSH_Key_Installer) - Automated SSH key deployment
+- [**ubuntu-in-termux**](https://github.com/MFDGaming/ubuntu-in-termux) - Ubuntu container implementation
+- [**XMRig**](https://github.com/xmrig/xmrig) - High-performance Monero miner
+- **The Termux Team** - Making Linux on Android possible
 
-- [ubuntu-in-termux](https://github.com/MFDGaming/ubuntu-in-termux)
+Special thanks to all contributors and testers who help improve this project! 🙏
 
 
 
