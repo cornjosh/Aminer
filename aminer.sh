@@ -9,7 +9,7 @@
 
 USER="12345"
 PASS=''
-MIMING_URL="mine.c3pool.com:13333"
+MINING_URL="mine.c3pool.com:13333"
 
 VERSION=1.0
 TOS=''
@@ -37,7 +37,7 @@ HELLO(){
   echo "Aminer is a script that help you install miner software XMRIG on Android device. @v$VERSION
 You can find the source code from https://github.com/cornjosh/Aminer
 "
-[ "$TOS" == '' ] && read -e -p "You are already understand the risks of the script.(Y/n)" TOS
+[ "$TOS" == '' ] && read -r -e -p "You are already understand the risks of the script.(Y/n)" TOS
 [ "$TOS" == 'n' ] || [ "$TOS" == 'N' ] && ERROR "Canceled by user" && exit 0
 }
 USAGE(){
@@ -67,10 +67,22 @@ GET_PASS(){
 
 
 UBUNTU(){
-  INFO "Upgrading packages" && pkg update && pkg upgrade -y
-  INFO "Installing dependency" && pkg install wget proot -y
+  INFO "Upgrading packages"
+  if ! pkg update || ! pkg upgrade -y; then
+    ERROR "Failed to update packages"
+    exit 1
+  fi
+  INFO "Installing dependency"
+  if ! pkg install wget proot -y; then
+    ERROR "Failed to install dependencies"
+    exit 1
+  fi
   cd "$HOME" || exit
-  mkdir ubuntu-in-termux && INFO "Create $HOME/ubuntu-in-termux"
+  if ! mkdir -p ubuntu-in-termux; then
+    ERROR "Failed to create ubuntu-in-termux directory"
+    exit 1
+  fi
+  INFO "Create $HOME/ubuntu-in-termux"
   UBUNTU_DOWNLOAD
   UBUNTU_INSTALL
   INFO "Ubuntu setup complete"
@@ -80,7 +92,11 @@ UBUNTU_DOWNLOAD(){
   HEAD "Download Ubuntu"
   cd "$HOME/ubuntu-in-termux" || exit
   [ -f "ubuntu.tar.gz" ] && rm -rf ubuntu.tar.gz && INFO "Remove old ubuntu image"
-  local ARCHITECTURE=$(dpkg --print-architecture)
+  local ARCHITECTURE
+  ARCHITECTURE=$(dpkg --print-architecture) || {
+    ERROR "Failed to detect architecture"
+    exit 1
+  }
   case "$ARCHITECTURE" in
   aarch64)
     ARCHITECTURE=arm64
@@ -97,30 +113,54 @@ UBUNTU_DOWNLOAD(){
   esac
   INFO "Device architecture :- $ARCHITECTURE"
   INFO "Downloading Ubuntu image"
-  wget https://mirrors.ustc.edu.cn/ubuntu-cdimage/ubuntu-base/releases/${UBUNTU_VERSION}/release/ubuntu-base-${UBUNTU_VERSION}-base-${ARCHITECTURE}.tar.gz -O ubuntu.tar.gz
+  if ! wget "https://mirrors.ustc.edu.cn/ubuntu-cdimage/ubuntu-base/releases/${UBUNTU_VERSION}/release/ubuntu-base-${UBUNTU_VERSION}-base-${ARCHITECTURE}.tar.gz" -O ubuntu.tar.gz; then
+    ERROR "Failed to download Ubuntu image"
+    exit 1
+  fi
+  # Verify download
+  if [ ! -s "ubuntu.tar.gz" ]; then
+    ERROR "Downloaded Ubuntu image is empty or corrupted"
+    exit 1
+  fi
 }
 
 UBUNTU_INSTALL(){
   HEAD "Install Ubuntu"
   local directory=ubuntu-fs
   cd "$HOME/ubuntu-in-termux" || exit
-  local cur=$(pwd)
-  mkdir -p $directory && INFO "Create $HOME/ubuntu-in-termux/$directory"
-  cd $directory || exit
-  INFO "Decompressing the ubuntu rootfs" && tar -zxf "$cur/ubuntu.tar.gz" --exclude='dev' && INFO "The ubuntu rootfs have been successfully decompressed"
-  printf "nameserver 8.8.8.8\nnameserver 8.8.4.4\n" > etc/resolv.conf && INFO "Fixing the resolv.conf"
+  local cur
+  cur=$(pwd) || {
+    ERROR "Failed to get current directory"
+    exit 1
+  }
+  mkdir -p "$directory" && INFO "Create $HOME/ubuntu-in-termux/$directory"
+  cd "$directory" || exit
+  INFO "Decompressing the ubuntu rootfs"
+  if ! tar -zxf "$cur/ubuntu.tar.gz" --exclude='dev'; then
+    ERROR "Failed to decompress Ubuntu rootfs"
+    exit 1
+  fi
+  INFO "The ubuntu rootfs have been successfully decompressed"
+  if ! printf "nameserver 8.8.8.8\nnameserver 8.8.4.4\n" > etc/resolv.conf; then
+    ERROR "Failed to create resolv.conf"
+    exit 1
+  fi
+  INFO "Fixing the resolv.conf"
   stubs=()
   stubs+=('usr/bin/groups')
   for f in "${stubs[@]}";do
   INFO "Writing stubs"
-  echo -e "#!/bin/sh\nexit" > "$f"
+  if ! echo -e "#!/bin/sh\nexit" > "$f"; then
+    ERROR "Failed to write stub: $f"
+    exit 1
+  fi
   done
   INFO "Successfully wrote stubs"
   cd "$cur" || exit
   mkdir -p ubuntu-binds
   local bin=startubuntu.sh
   INFO "Creating the start script"
-  cat > $bin <<- EOM
+  cat > "$bin" <<- EOM
 #!/bin/bash
 cd \$(dirname \$0)
 ## unset LD_PRELOAD in case termux-exec is installed
@@ -159,8 +199,8 @@ else
     \$command -c "\$com"
 fi
 EOM
-  termux-fix-shebang $bin
-  chmod +x $bin
+  termux-fix-shebang "$bin"
+  chmod +x "$bin"
   rm ubuntu.tar.gz -rf && INFO "Delete Ubuntu image"
   INFO "Ubuntu $UBUNTU_VERSION install complete"
 }
@@ -326,8 +366,8 @@ apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev -y
 INFO "Getting xmrig source code"
 git clone https://github.com/C3Pool/xmrig-C3.git
 INFO "Changing donate level to $DONATE %"
-sed -i 's/kDefaultDonateLevel = 1/kDefaultDonateLevel = $DONATE/g' ./xmrig-C3/src/donate.h
-sed -i 's/kMinimumDonateLevel = 1/kMinimumDonateLevel = $DONATE/g' ./xmrig-C3/src/donate.h
+sed -i "s/kDefaultDonateLevel = 1/kDefaultDonateLevel = $DONATE/g" ./xmrig-C3/src/donate.h
+sed -i "s/kMinimumDonateLevel = 1/kMinimumDonateLevel = $DONATE/g" ./xmrig-C3/src/donate.h
 mkdir xmrig-C3/build && cd xmrig-C3/build && cmake .. && make -j\$(nproc) && mv xmrig \$HOME && cd \$HOME && rm -rf xmrig-C3
 INFO "XMRIG create success"
 HEAD "Please restart Termux App to run XMRIG"
@@ -360,16 +400,28 @@ HEAD(){
 HEAD "Aminer is starting"
 cd "\$HOME"
 INFO "Killing other Aminer"
-ps -ef|grep service.sh|grep -v grep|grep -v \$\$|cut -c 9-15|xargs kill -s 9
-ps -ef|grep xmrig|grep -v grep|cut -c 9-15|xargs kill -s 9
+# Use more compatible process killing approach
+if command -v pgrep >/dev/null 2>&1; then
+    pgrep -f service.sh | grep -v \$\$ | xargs -r kill -9 2>/dev/null || true
+    pgrep -f xmrig | xargs -r kill -9 2>/dev/null || true
+else
+    # Fallback for systems without pgrep
+    ps | grep service.sh | grep -v grep | grep -v \$\$ | awk '{print \$1}' | xargs -r kill -9 2>/dev/null || true
+    ps | grep xmrig | grep -v grep | awk '{print \$1}' | xargs -r kill -9 2>/dev/null || true
+fi
 
 while true
 do
-	PID_COUNT=\$(ps aux|grep ./xmrig |grep -v grep|wc -l)
-	if [ \$PID_COUNT -eq 0 ]
+	# Use more compatible process checking
+	if command -v pgrep >/dev/null 2>&1; then
+		PID_COUNT=\$(pgrep -f "./xmrig" | wc -l)
+	else
+		PID_COUNT=\$(ps | grep "./xmrig" | grep -v grep | wc -l)
+	fi
+	if [ "\$PID_COUNT" -eq 0 ]
 	then
 		[ ! -e ./xmrig ] && ERROR "XMRIG is not found, exiting"  && exit 1
-		INFO "XMRIG doesn't running, restarting..." && ./xmrig --randomx-mode=light --no-huge-pages -u $USER -p $PASS -o $MIMING_URL
+		INFO "XMRIG doesn't running, restarting..." && ./xmrig --randomx-mode=light --no-huge-pages -u $USER -p $PASS -o $MINING_URL
 	fi
 	sleep 15
 done
@@ -387,7 +439,8 @@ SSH_INSTALL(){
   INFO "Setting termux's .bashrc" && echo "sshd" >> "$HOME/.bashrc"
   INFO "Starting sshd..." && sshd
   HEAD "Finish"
-  local IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d '/')
+  local IP
+  IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d '/') || IP="unknown"
   INFO "SSH server running at: $IP:8022"
   INFO "Login with any username and your private key"
 }
@@ -405,7 +458,7 @@ while getopts "yu:p:o:d:g:" OPT; do
         PASS=$OPTARG
         ;;
     o)
-        MIMING_URL=$OPTARG
+        MINING_URL=$OPTARG
         ;;
     d)
         DONATE=$OPTARG
