@@ -64,6 +64,16 @@
 | Redmi Note 2 | 5.0 | 0.73 | ✅ Working |
 | Redmi 5 Plus | 7.0 | 0.108 | ✅ Working |
 | Redmi K30 Pro | 11 | 0.108 | ✅ Working |
+| Samsung A50 | 11 | 0.108 | ✅ Working |
+| Xiaomi 11 | N/A | N/A | ✅ Working |
+| Meizu Note6 | 7.1.2 | N/A | ✅ Working |
+| Meizu Note5 | 7.1 | N/A | ✅ Working |
+| Huawei R9m | 7.1 | N/A | ✅ Working |
+| Honor 5X | 7.1 | N/A | ✅ Working |
+| Xiaomi 8 | 10 | N/A | ✅ Working |
+| Vivo S7e | 10 | N/A | ✅ Working |
+| Samsung S21 | N/A | N/A | ✅ Working |
+| Huawei P50 | N/A | N/A | ✅ Working |
 
 > 📝 **Note**: Feel free to open an issue to report compatibility with your device!
 
